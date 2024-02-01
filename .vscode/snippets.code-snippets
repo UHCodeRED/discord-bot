@@ -1,0 +1,20 @@
+{
+  "command": {
+    "scope": "typescript",
+    "prefix": "command-discordjs",
+    "description": "A new discord bot command",
+    "body": [
+      "import { SlashCommandBuilder } from \"discord.js\";",
+      "import { Command } from \"../interfaces/Command\";",
+      "",
+      "export const $1: Command = {",
+      "	data: new SlashCommandBuilder()",
+      "		.setName(\"$1\")",
+      "		.setDescription(\"A new discord bot command!\"),",
+      "	run: async (interaction) => {",
+      "		await interaction.deferReply();",
+      "	},",
+      "};",
+    ],
+  },
+}
