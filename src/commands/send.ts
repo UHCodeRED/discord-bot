@@ -18,7 +18,7 @@ export const send: Command = {
     const { channel } = interaction;
     if (!channel) return;
 
-    const message = `${interaction.options.get("message", true).value}`;
+    const message = `${interaction.options.getString("message", true)}`;
 
     await channel.send(message);
     await interaction.editReply("Successfully sent your message!");
