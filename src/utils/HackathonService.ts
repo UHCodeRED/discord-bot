@@ -224,4 +224,75 @@ export default class HackathonService {
       content: `Congratulations! You have successfully created your new team, ${team}! Chat with your team in ${teamChannel}!`,
     };
   };
+
+  static botInviteMessage = ():
+    | string
+    | MessagePayload
+    | InteractionReplyOptions => {
+    return {
+      content: `You cannot have a bot on your team. 🤖`,
+    };
+  };
+
+  static noTeamToInviteToMessage = ():
+    | string
+    | MessagePayload
+    | InteractionReplyOptions => {
+    return {
+      content: `You must be in a team to invite somebody! Use the \`/create_team\` command to start a new one!`,
+    };
+  };
+
+  static teamAtMaxMessage = (
+    team: Role
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `Your team ${team} has already hit the maximum of 4 people.`,
+    };
+  };
+
+  static otherAlreadyInTeamMessage = (
+    member: GuildMember,
+    team: Role
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `Sorry, ${member} is already in team ${team}.`,
+    };
+  };
+
+  static inviteFromDifferentTeamMessage = (
+    team: Role
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `You cannot send an invite for ${team}.`,
+    };
+  };
+
+  static inviteMessage = (user: User, team: Role, sender: User): string => {
+    return `Hello ${user}! You have been invited to join the team **${team.name}** from ${sender}! Please react with ✅ in the next minute to accept!`;
+  };
+
+  static inviteSentMessage = (
+    user: User,
+    team: Role
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `Invite for ${user} to join ${team} sent!`,
+    };
+  };
+
+  static joinedTeamMessage = async (team: Role): Promise<string> => {
+    const teamName = team.name;
+    const teamChannel = await this.getTeamChannel(team);
+    return `Congratulations! You have successfully joined **${teamName}**! Chat with your team in ${teamChannel}!`;
+  };
+
+  static sentInviteExpiredMessage = (
+    invitedMember: GuildMember
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `Invite to ${invitedMember} has expired.`,
+      ephemeral: true,
+    };
+  };
 }

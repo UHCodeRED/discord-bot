@@ -5,4 +5,5 @@ export const IntentOptions: GatewayIntentBits[] = [
   GatewayIntentBits.GuildEmojisAndStickers,
   GatewayIntentBits.GuildMessages,
   GatewayIntentBits.GuildMessageReactions,
+  GatewayIntentBits.DirectMessageReactions,
 ];
