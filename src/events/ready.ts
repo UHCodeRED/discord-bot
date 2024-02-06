@@ -1,5 +1,5 @@
 import { REST } from "@discordjs/rest";
-import { Client, PresenceStatusData } from "discord.js";
+import { Client, PresenceStatusData, TextChannel } from "discord.js";
 import { Routes } from "discord-api-types/v10";
 import { CommandList } from "../utils/_Commandlist";
 import config from "../config/config.json";
@@ -17,6 +17,8 @@ export const onReady = async (client: Client) => {
   await client.guilds.fetch();
   const guilds = client.guilds.cache;
 
+  let logChannel: TextChannel | undefined;
+
   for (const guildEntry of guilds) {
     const guild = guildEntry[1];
     await rest.put(
@@ -26,6 +28,22 @@ export const onReady = async (client: Client) => {
       ),
       { body: commandData }
     );
+
+    const channelFound = guild.channels.cache.find(
+      (ch) => ch.id === "1202387313083306034"
+    ) as TextChannel | undefined;
+
+    logChannel = logChannel || channelFound;
+  }
+
+  if (logChannel) {
+    const oldLog = console.log;
+
+    console.log = (logString: string) => {
+      oldLog(logString);
+      const logMessage = `\`[${new Date().toLocaleString()}]\`\t${logString}`;
+      logChannel.send(logMessage);
+    };
   }
 
   console.log("✅ Successfully loaded (/) commands.");

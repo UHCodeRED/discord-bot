@@ -15,12 +15,15 @@ export const send: Command = {
   run: async (interaction) => {
     await interaction.deferReply({ ephemeral: true });
 
-    const { channel } = interaction;
+    const { user, channel } = interaction;
     if (!channel) return;
 
     const message = `${interaction.options.getString("message", true)}`;
 
-    await channel.send(message);
+    const sentMessage = await channel.send(message);
+
+    console.log(`${user} used the bot to send ${sentMessage.url}`);
+
     await interaction.editReply("Successfully sent your message!");
   },
 };

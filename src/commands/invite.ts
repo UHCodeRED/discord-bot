@@ -67,6 +67,10 @@ export const invite: Command = {
     );
     await invite.react("✅");
 
+    console.log(
+      `${user} has invited ${invitedUser} to ${team} (**${team.name}**).`
+    );
+
     const inviteAcceptCollector = invite.createReactionCollector({
       time: 60000,
     });
@@ -78,6 +82,10 @@ export const invite: Command = {
     inviteAcceptCollector.on("collect", async (reaction, acceptedUser) => {
       if (acceptedUser.id !== invitedUser.id) return;
 
+      console.log(
+        `${invitedUser} has accepted ${user}'s invitation to ${team} (**${team.name}**).`
+      );
+
       await HackathonService.addToTeam(invitedMember, team);
       await invitedMemberDM.send(
         await HackathonService.joinedTeamMessage(team)
@@ -88,6 +96,10 @@ export const invite: Command = {
 
     inviteAcceptCollector.on("end", async () => {
       if ((await HackathonService.getTeam(invitedMember)) === team) return;
+
+      console.log(
+        `${user}'s invitation to ${invitedUser} for ${team} (**${team.name}**) has expired.`
+      );
 
       await invitedMemberDM.send(`Sorry, this invite has expired!`);
       await interaction.followUp(

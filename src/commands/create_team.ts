@@ -61,6 +61,8 @@ export const create_team: Command = {
       color,
     });
 
+    console.log(`${user} has created ${newTeam} (**${teamName}**).`);
+
     await HackathonService.addToTeam(member, newTeam);
     await interaction.editReply(await HackathonService.newTeamMessage(newTeam));
   },

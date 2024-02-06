@@ -184,10 +184,7 @@ export default class HackathonService {
       channel.permissionsFor(team).has(["ViewChannel"])
     );
     if (!teamChannel) {
-      console.log(
-        `Error in "getTeamChannel": The team channel for ${team.name} is not found.`
-      );
-      return undefined;
+      return this.createTeamChannel(team);
     }
 
     return teamChannel as TextChannel;
@@ -293,6 +290,53 @@ export default class HackathonService {
     return {
       content: `Invite to ${invitedMember} has expired.`,
       ephemeral: true,
+    };
+  };
+
+  static notInTeamMessage = ():
+    | string
+    | MessagePayload
+    | InteractionReplyOptions => {
+    return {
+      content: `You are not currently in a team.`,
+    };
+  };
+
+  static leaveTeam = async (member: GuildMember): Promise<string> => {
+    const guild = member.guild;
+
+    const team = await this.getTeam(member);
+    if (!team) return "nothing";
+
+    await member.roles.remove(team);
+    console.log(`${member} has left ${team} (**${team.name}**).`);
+
+    const teamless = await this.getTeamless(guild);
+    if (teamless) {
+      await member.roles.add(teamless);
+    }
+
+    const teamChannel =
+      (await this.getTeamChannel(team)) || (await this.createTeamChannel(team));
+    if (!teamChannel) return team.name;
+
+    if (team.members.size === 0) {
+      await teamChannel.delete();
+      await team.delete();
+      console.log(`**${team.name}** has been abandoned.`);
+
+      return team.name;
+    }
+
+    await teamChannel.send(`${member} has left ${team}`);
+    return team.name;
+  };
+
+  static leaveTeamMessage = (
+    teamName: string
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `You have left the team **${teamName}**.`,
     };
   };
 }
