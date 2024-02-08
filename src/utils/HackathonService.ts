@@ -357,4 +357,15 @@ export default class HackathonService {
       await teamChannel.send(`${member} has joined ${team}!`);
     }
   };
+
+  static promotionChannel = (guild: Guild): TextChannel => {
+    return guild.channels.cache.find(
+      (c) => c.id === "1202385184809418753"
+    ) as TextChannel;
+  };
+
+  static promotionMessage = async (team: Role): Promise<string> => {
+    const teamless = (await this.getTeamless(team.guild)) || "Teamless people!";
+    return `${teamless} React with ✅ to join ${team}!`;
+  };
 }
