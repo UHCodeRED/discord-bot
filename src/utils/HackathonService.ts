@@ -18,6 +18,7 @@ export default class HackathonService {
     "Admin",
     "Hacker",
     "Teamless",
+    "AutoTeam",
     "Server Booster",
     "Server Manager",
     "@everyone",
@@ -338,5 +339,22 @@ export default class HackathonService {
     return {
       content: `You have left the team **${teamName}**.`,
     };
+  };
+
+  static addManyToTeam = async (
+    members: GuildMember[],
+    team: Role
+  ): Promise<void> => {
+    const { guild } = team;
+    const teamless = await this.getTeamless(guild);
+
+    const teamChannel = await this.getTeamChannel(team);
+    if (!teamChannel) return;
+
+    for (const member of members) {
+      await member.roles.add(team);
+      teamless && (await member.roles.remove(teamless));
+      await teamChannel.send(`${member} has joined ${team}!`);
+    }
   };
 }
