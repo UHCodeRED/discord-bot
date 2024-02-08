@@ -36,15 +36,13 @@ export const onReady = async (client: Client) => {
     logChannel = logChannel || channelFound;
   }
 
-  if (logChannel) {
-    const oldLog = console.log;
+  const oldLog = console.log;
 
-    console.log = (logString: string) => {
-      oldLog(logString);
-      const logMessage = `\`[${new Date().toLocaleString()}]\`\t${logString}`;
-      logChannel.send(logMessage);
-    };
-  }
+  console.log = (logString: string) => {
+    oldLog(logString);
+    const logMessage = `\`[${new Date().toLocaleString()}]\`\t${logString}`;
+    logChannel && logChannel.send(logMessage);
+  };
 
   console.log("✅ Successfully loaded (/) commands.");
 
@@ -67,5 +65,11 @@ export const onReady = async (client: Client) => {
   console.log("Guild List:");
   client.guilds.cache.forEach((guild) => {
     console.log(guild.name);
+  });
+
+  process.on("uncaughtException", async (error) => {
+    console.log(`@ben.json THE BOT HAS SHUT DOWN!`);
+    console.log(error.stack);
+    process.exit(1);
   });
 };
