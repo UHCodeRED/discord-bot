@@ -59,6 +59,7 @@ export const create_team: Command = {
     const newTeam = await guild.roles.create({
       name: teamName,
       color,
+      position: 5,
     });
 
     console.log(`${user} has created ${newTeam} (**${teamName}**).`);
