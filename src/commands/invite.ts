@@ -42,6 +42,18 @@ export const invite: Command = {
       return;
     }
 
+    const hackerRole = (await guild.roles.fetch()).find(
+      (r) => r.name.toLowerCase() === "hacker"
+    );
+    if (!hackerRole) return;
+
+    if (!invitedMember.roles.cache.find((r) => r === hackerRole)) {
+      await interaction.editReply(
+        `${invitedMember} has not been verified yet!`
+      );
+      return;
+    }
+
     const invitedMemberTeam = await HackathonService.getTeam(invitedMember);
     if (invitedMemberTeam) {
       await interaction.editReply(

@@ -1,4 +1,5 @@
 import {
+  CategoryChannel,
   ChannelType,
   Collection,
   ColorResolvable,
@@ -109,45 +110,58 @@ export default class HackathonService {
   static createTeamChannel = async (
     team: Role
   ): Promise<TextChannel | undefined> => {
-    const guild = team.guild;
+    const { guild } = team;
     const channels = await guild.channels.fetch();
-    if (!channels) return;
-    const targetChannel = channels.find((channel) => {
-      if (!channel) return false;
-      return channel.name === "unused";
-    });
-    if (!targetChannel) {
-      console.log(
-        `Error in "createTeamChannel": The "unused" channel is not found.`
-      );
-      return undefined;
+
+    for (let i = 0; i < 3; i++) {
+      const categoryName = `Team Chats ${i + 1}`;
+      let category = channels.find(
+        (c) =>
+          c && c.name === categoryName && c.type === ChannelType.GuildCategory
+      ) as CategoryChannel | undefined;
+
+      const everyoneRoleId = guild.roles.cache.find(
+        (r) => r.name === "@everyone"
+      )?.id;
+
+      if (!category) {
+        const newCategory = await guild.channels.create({
+          name: categoryName,
+          type: ChannelType.GuildCategory,
+          permissionOverwrites: [
+            {
+              id: everyoneRoleId || "0",
+              deny: ["ViewChannel"],
+            },
+          ],
+        });
+
+        category = newCategory;
+      }
+
+      if (category.children.cache.size === 50) {
+        continue;
+      }
+
+      const teamChannel = await category.children.create({
+        name: team.name,
+        type: ChannelType.GuildText,
+        permissionOverwrites: [
+          {
+            id: everyoneRoleId || "0",
+            deny: ["ViewChannel"],
+          },
+          {
+            id: team.id,
+            allow: ["ViewChannel", "ReadMessageHistory"],
+          },
+        ],
+      });
+
+      return teamChannel;
     }
 
-    const category = targetChannel.parent;
-    if (!category) {
-      console.log(
-        `Error in "createTeamChannel": The team chat category is not found.`
-      );
-      return undefined;
-    }
-
-    const teamChannel = await category.children.create({
-      name: team.name,
-      type: ChannelType.GuildText,
-
-      permissionOverwrites: [
-        {
-          id: guild.roles.cache.find((r) => r.name === "@everyone")?.id || "0",
-          deny: ["ViewChannel"],
-        },
-        {
-          id: team.id,
-          allow: ["ViewChannel", "ReadMessageHistory"],
-        },
-      ],
-    });
-
-    return teamChannel;
+    return;
   };
 
   static getTeamless = async (guild: Guild): Promise<Role | undefined> => {
@@ -161,28 +175,12 @@ export default class HackathonService {
   ): Promise<TextChannel | undefined> => {
     const guild = team.guild;
     const channels = await guild.channels.fetch();
-    const targetChannel = channels.find((channel) => {
-      if (!channel) return false;
-      return channel.name === "unused";
-    });
 
-    if (!targetChannel) {
-      console.log(
-        `Error in "getTeamChannel": The "unused" channel is not found.`
-      );
-      return undefined;
-    }
-
-    const category = targetChannel.parent;
-    if (!category) {
-      console.log(
-        `Error in "getTeamChannel": The team chat category is not found.`
-      );
-      return undefined;
-    }
-
-    const teamChannel = category.children.cache.find((channel) =>
-      channel.permissionsFor(team).has(["ViewChannel"])
+    const teamChannel = channels.find(
+      (channel) =>
+        channel &&
+        channel.permissionsFor(team).has(["ViewChannel"]) &&
+        channel.parent?.name.includes("Team Chats")
     );
     if (!teamChannel) {
       return this.createTeamChannel(team);
