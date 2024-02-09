@@ -6,6 +6,7 @@ import { invite } from "../commands/invite";
 import { leave_team } from "../commands/leave_team";
 import { promote } from "../commands/promote";
 import { reject } from "../commands/reject";
+import { report } from "../commands/report";
 import { send } from "../commands/send";
 import { verify } from "../commands/verify";
 import { whois } from "../commands/whois";
@@ -23,4 +24,5 @@ export const CommandList: Command[] = [
   reject,
   verify,
   whois,
+  report,
 ];

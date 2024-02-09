@@ -41,7 +41,7 @@ export const onReady = async (client: Client) => {
   console.log = (logString: string) => {
     oldLog(logString);
     const logMessage = `\`[${new Date().toLocaleString()}]\`\t${logString}`;
-    logChannel && logChannel.send(logMessage);
+    logChannel && logChannel.send({ content: logMessage, embeds: [] });
   };
 
   console.log("✅ Successfully loaded (/) commands.");
