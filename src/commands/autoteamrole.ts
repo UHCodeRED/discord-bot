@@ -1,4 +1,8 @@
-import { SlashCommandBuilder, TextChannel } from "discord.js";
+import {
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  TextChannel,
+} from "discord.js";
 import { Command } from "../interfaces/Command";
 import HackathonService from "../utils/HackathonService";
 import { createGeneral } from "../utils/embedCreator";
@@ -7,6 +11,7 @@ export const autoteamrole: Command = {
   data: new SlashCommandBuilder()
     .setName("autoteamrole")
     .setDescription("Send the auto team role message!")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addChannelOption((option) =>
       option
         .setName("channel")

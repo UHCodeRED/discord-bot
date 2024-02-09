@@ -1,4 +1,8 @@
-import { GuildMember, SlashCommandBuilder } from "discord.js";
+import {
+  GuildMember,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+} from "discord.js";
 import { Command } from "../interfaces/Command";
 import HackathonService from "../utils/HackathonService";
 
@@ -6,6 +10,7 @@ export const autoteam: Command = {
   data: new SlashCommandBuilder()
     .setName("autoteam")
     .setDescription("Send the auto team role message!")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption((option) =>
       option
         .setName("team_name")
