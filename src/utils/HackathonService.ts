@@ -383,4 +383,12 @@ export default class HackathonService {
       content: `❌ We could not verify you with the email **${email}**.`,
     };
   };
+
+  static getTeams = async (
+    guild: Guild
+  ): Promise<Collection<string, Role> | undefined> => {
+    return (await guild.roles.fetch()).filter((team) =>
+      this.teamNameAllowed(team.name)
+    );
+  };
 }
