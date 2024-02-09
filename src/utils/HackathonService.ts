@@ -368,4 +368,21 @@ export default class HackathonService {
     const teamless = (await this.getTeamless(team.guild)) || "Teamless people!";
     return `${teamless} React with ✅ to join ${team}!`;
   };
+
+  static verifiedMessage = ():
+    | string
+    | MessagePayload
+    | InteractionReplyOptions => {
+    return {
+      content: `✅ You have been verified!`,
+    };
+  };
+
+  static notVerifiedMessage = (
+    email: string
+  ): string | MessagePayload | InteractionReplyOptions => {
+    return {
+      content: `❌ We could not verify you with the email **${email}**.`,
+    };
+  };
 }

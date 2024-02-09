@@ -9,5 +9,15 @@ export const validateEnv = () => {
     return false;
   }
 
+  if (!process.env.SUPABASE_URL) {
+    console.warn("Missing Supabase URL.");
+    return false;
+  }
+
+  if (!process.env.SUPABASE_KEY) {
+    console.warn("Missing Supabase KEY.");
+    return false;
+  }
+
   return true;
 };
