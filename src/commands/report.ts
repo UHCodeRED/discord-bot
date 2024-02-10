@@ -6,7 +6,7 @@ import { createGeneral } from "../utils/embedCreator";
 export const report: Command = {
   data: new SlashCommandBuilder()
     .setName("report")
-    .setDescription("Provides information on using this bot!")
+    .setDescription("Make a report to the CodeRED officer team!")
     .addStringOption((option) =>
       option
         .setName("report")

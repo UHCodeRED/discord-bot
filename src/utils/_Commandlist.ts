@@ -2,6 +2,7 @@ import { accept } from "../commands/accept";
 import { autoteam } from "../commands/autoteam";
 import { autoteamrole } from "../commands/autoteamrole";
 import { create_team } from "../commands/create_team";
+import { help } from "../commands/help";
 import { invite } from "../commands/invite";
 import { leave_team } from "../commands/leave_team";
 import { promote } from "../commands/promote";
@@ -27,4 +28,5 @@ export const CommandList: Command[] = [
   whois,
   report,
   rename_team,
+  help,
 ];
